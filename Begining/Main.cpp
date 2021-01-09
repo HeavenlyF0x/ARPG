@@ -1,15 +1,18 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Settings.h";
+#include "Settings.h"
+
 
 using namespace sf;
 
 int main()
 {
+	CreateSettingsFile();
+
 	WindowSettings WinSettings;
 	RenderWindow window(sf::VideoMode(WinSettings.WindowWidth, WinSettings.WindowWidth), "Begining by Paxamet");
 	
-	Image HeroImage;
+	/*Image HeroImage;
 	HeroImage.loadFromFile("images/hero.png");
 	HeroImage.createMaskFromColor(Color(0,255,0));
 
@@ -19,7 +22,7 @@ int main()
 	Sprite HeroSprite;
 	HeroSprite.setTexture(HeroTexture);
 	HeroSprite.setTextureRect(IntRect(0, 0, 64, 64));
-	HeroSprite.setPosition(WinSettings.WindowWidth / 2, WinSettings.WindowHeigh / 2);
+	HeroSprite.setPosition(WinSettings.WindowWidth / 2, WinSettings.WindowHeigh / 2);*/
 
 	while (window.isOpen())
 	{
@@ -31,7 +34,7 @@ int main()
 				//std::cout << "---shutdown program" << endl;
 			}
 
-			if (Keyboard::isKeyPressed(Keyboard::W)) 
+			/*if (Keyboard::isKeyPressed(Keyboard::W)) 
 			{
 				HeroSprite.move(0, -0.5);
 				HeroSprite.setRotation(0);
@@ -55,12 +58,12 @@ int main()
 			if (Mouse::isButtonPressed(Mouse::Left))
 			{
 				HeroSprite.setPosition(Vector2f(Mouse::getPosition()));
-			}
+			}*/
 
 			//std::cout << "---Hero pos (x: " << HeroSprite.getPosition().x << ", y: " << HeroSprite.getPosition().y << ")\n";
 		}
 		window.clear();
-		window.draw(HeroSprite);
+		//window.draw(HeroSprite);
 		window.display();
 	
 	}
