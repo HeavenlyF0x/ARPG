@@ -28,7 +28,7 @@ int main()
 		{
 			if (event.type == Event::Closed) {
 				window.close();
-				std::cout << "---shutdown program";
+				//std::cout << "---shutdown program" << endl;
 			}
 
 			if (Keyboard::isKeyPressed(Keyboard::W)) 
@@ -64,5 +64,6 @@ int main()
 		window.display();
 	
 	}
+	//system("pause");
 	return 0;
 }
