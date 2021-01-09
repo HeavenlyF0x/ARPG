@@ -7,10 +7,12 @@ using namespace sf;
 
 int main()
 {
-	CreateSettingsFile();
+	
 
-	WindowSettings WinSettings;
-	RenderWindow window(sf::VideoMode(WinSettings.WindowWidth, WinSettings.WindowWidth), "Begining by Paxamet");
+	Settings GameSettings = Settings();
+	//CreateSettingsFile();
+	
+	RenderWindow window(sf::VideoMode(GameSettings., GameSettings.WindowWidth), "Begining by Paxamet");
 	
 	/*Image HeroImage;
 	HeroImage.loadFromFile("images/hero.png");
