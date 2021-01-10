@@ -12,7 +12,7 @@ int main()
 	Settings GameSettings = Settings();
 	//CreateSettingsFile();
 	
-	RenderWindow window(sf::VideoMode(GameSettings., GameSettings.WindowWidth), "Begining by Paxamet");
+	RenderWindow window(sf::VideoMode(std::stof(GameSettings.SettMap["WindowWidth"]), std::stof(GameSettings.SettMap["WindowHeigh"])), GameSettings.SettMap["WindowTitle"]);
 	
 	/*Image HeroImage;
 	HeroImage.loadFromFile("images/hero.png");
