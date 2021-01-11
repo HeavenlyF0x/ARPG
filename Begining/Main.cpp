@@ -7,67 +7,93 @@ using namespace sf;
 
 int main()
 {
-	
-
 	Settings GameSettings = Settings();
-	//CreateSettingsFile();
+	RenderWindow window(sf::VideoMode(std::stof(GameSettings.SettMap[GameSettings.SettMapParam.WINDOWWIDTH]), std::stof(GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH])), GameSettings.SettMap[GameSettings.SettMapParam.WINDOWTITLE]);
 	
-	RenderWindow window(sf::VideoMode(std::stof(GameSettings.SettMap["WindowWidth"]), std::stof(GameSettings.SettMap["WindowHeigh"])), GameSettings.SettMap["WindowTitle"]);
-	
-	/*Image HeroImage;
-	HeroImage.loadFromFile("images/hero.png");
-	HeroImage.createMaskFromColor(Color(0,255,0));
+	int ISelector = 0;
 
-	Texture HeroTexture;
-	HeroTexture.loadFromImage(HeroImage);
+	int ISelectMenu = 0; //lock menu
+	string MenuText[] = {
+				"Main string",
+				"Settings",
+				"Quit" };
 
-	Sprite HeroSprite;
-	HeroSprite.setTexture(HeroTexture);
-	HeroSprite.setTextureRect(IntRect(0, 0, 64, 64));
-	HeroSprite.setPosition(WinSettings.WindowWidth / 2, WinSettings.WindowHeigh / 2);*/
+	Font font;
+	font.loadFromFile("calibri.ttf");
+	Text text;
+	text.setFont(font);
+	text.setCharacterSize(60);
+	//text.setOrigin(text.getLocalBounds().width/2, 0);
+	//text.getLocalBounds().width;
+	//text.setStyle(Text::Bold);
 
 	while (window.isOpen())
 	{
+		window.clear();
 		Event event;
 		while (window.pollEvent(event))
 		{
 			if (event.type == Event::Closed) {
 				window.close();
-				//std::cout << "---shutdown program" << endl;
 			}
-
-			/*if (Keyboard::isKeyPressed(Keyboard::W)) 
+			switch (ISelector)
 			{
-				HeroSprite.move(0, -0.5);
-				HeroSprite.setRotation(0);
+			case 0: {
+				if (Keyboard::isKeyPressed(Keyboard::Up) && ISelectMenu > 0)
+				{
+					ISelectMenu--;
+				}
+				if (Keyboard::isKeyPressed(Keyboard::Down) && ISelectMenu < size(MenuText)-1)
+				{
+					ISelectMenu++;
+				}
+				if (Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space))
+				{
+					switch (ISelectMenu)
+					{
+					case 2: { //QUIT in Main menu
+						window.close();
+						break;
+					}
+					default:
+						break;
+					}
+					std::cout << "Selected: " << MenuText[ISelectMenu] << std::endl;
+				}
+				break;
 			}
-			if (Keyboard::isKeyPressed(Keyboard::S))
-			{
-				HeroSprite.move(0, 0.5);
-				HeroSprite.setRotation(180);
+			default:
+				break;
 			}
-			if (Keyboard::isKeyPressed(Keyboard::A))
-			{
-				HeroSprite.move(-0.5, 0);
-				HeroSprite.setRotation(270);
-			}
-			if (Keyboard::isKeyPressed(Keyboard::D))
-			{
-				HeroSprite.move(0.5, 0);
-				HeroSprite.setRotation(90);
-			}
-
-			if (Mouse::isButtonPressed(Mouse::Left))
-			{
-				HeroSprite.setPosition(Vector2f(Mouse::getPosition()));
-			}*/
-
-			//std::cout << "---Hero pos (x: " << HeroSprite.getPosition().x << ", y: " << HeroSprite.getPosition().y << ")\n";
+			
 		}
-		window.clear();
-		//window.draw(HeroSprite);
+
+		switch (ISelector)
+		{
+		case 0: 
+			{ //main menu
+				int IStartPosX = (window.getSize().x ) / 2 - text.getLocalBounds().width; // меню в середине экрана
+				int IStartPosY = 0;
+				int IStepPos = 60;
+				text.setPosition(IStartPosX, IStartPosY);
+				for (int i = 0; i < size(MenuText); i++)
+				{
+					if (i == ISelectMenu)
+						text.setFillColor(Color::Green);
+					else text.setFillColor(Color::White);
+					text.setString(MenuText[i]);
+					if (i != 0)
+						//text.setPosition(IStartPosX , IStartPosY + IStepPos * i);
+						text.move(0, IStepPos);
+					window.draw(text);
+					//std::cout << text.getLocalBounds().width << std::endl;
+				}
+				break;
+			}
+		}
+		window.draw(text);
 		window.display();
-	
+		//std::cout << Vector2f(text.getOrigin()).x << " " << Vector2f(text.getOrigin()).y << std::endl;
 	}
 	//system("pause");
 	return 0;

@@ -9,18 +9,23 @@ using namespace std;
 
 //TCHAR SettingsPath[] = L"C:\\Users\\\\Documents\\ARPG";
 //TCHAR SettingFile[] = L"Settings.ini";
+struct MapParamStruct
+{
+	const string WINDOWWIDTH = "WindowWidth";
+	const string WINDOWHEIGH = "WindowHeigh";
+	const string WINDOWTITLE = "WindowTitle";
+};
+
 class Settings //Настройки по умолчанию
 {
 public:
-	string SettingFile = "Settings.ini";
-	//string WindowWidth;
-	//string WindowHeigh;
-	//string WindowTitle;
+	MapParamStruct SettMapParam;
 	map <string, string> SettMap; //для хранения стандартных параметров
 
 	Settings();
 	~Settings();
 private:
+	string SettingFile = "Settings.ini";
 	int CheckSettingsFile(); //Проверяет наличие файла с настройками, если его нет, то создает и заполняет стандратными настройками (Settings.SettMap), если он есть выполняет LoadSettingsFromFile()
 	int LoadSettingsFromFile();//Чтение файа настрое и загрузка параметров в Settings.SettMap
 	
@@ -29,9 +34,9 @@ private:
 Settings::Settings() 
 {
 	SettMap = { //Стандартные параметры
-	   {"WindowWidth", "800"},
-	   {"WindowHeigh", "600"},
-	   {"WindowTitle", "Paxamet's ARPG"}
+	   {SettMapParam.WINDOWHEIGH, "800"},
+	   {SettMapParam.WINDOWWIDTH, "600"},
+	   {SettMapParam.WINDOWTITLE, "Paxamet's ARPG"}
 	};
 	CheckSettingsFile();
 }
