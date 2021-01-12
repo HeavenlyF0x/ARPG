@@ -14,6 +14,7 @@ struct MapParamStruct
 	const string WINDOWWIDTH = "WindowWidth";
 	const string WINDOWHEIGH = "WindowHeigh";
 	const string WINDOWTITLE = "WindowTitle";
+	const string SCREENMODE = "ScreenMode";
 };
 
 class Settings //Настройки по умолчанию
@@ -28,21 +29,31 @@ private:
 	string SettingFile = "Settings.ini";
 	int CheckSettingsFile(); //Проверяет наличие файла с настройками, если его нет, то создает и заполняет стандратными настройками (Settings.SettMap), если он есть выполняет LoadSettingsFromFile()
 	int LoadSettingsFromFile();//Чтение файа настрое и загрузка параметров в Settings.SettMap
-	
+	int SettMapParamScreenmodeCrutch();
 };
 
 Settings::Settings() 
 {
 	SettMap = { //Стандартные параметры
-	   {SettMapParam.WINDOWHEIGH, "800"},
-	   {SettMapParam.WINDOWWIDTH, "600"},
-	   {SettMapParam.WINDOWTITLE, "Paxamet's ARPG"}
+	    {SettMapParam.WINDOWWIDTH, "1280"},
+	    {SettMapParam.WINDOWHEIGH, "1024"},
+	    {SettMapParam.WINDOWTITLE, "Paxamet's ARPG"},
+		{SettMapParam.SCREENMODE, "Borderless"} //None - 0 , без рамки не на весь экран (Borderless); Fullscreen - 8 - фуллскрин
 	};
 	CheckSettingsFile();
 }
 
 Settings::~Settings()
 {
+}
+
+int Settings::SettMapParamScreenmodeCrutch() 
+{
+	if (SettMap[SettMapParam.SCREENMODE] == "Fullscreen")
+		SettMap[SettMapParam.SCREENMODE] = "8";
+	if (SettMap[SettMapParam.SCREENMODE] == "Borderless")
+		SettMap[SettMapParam.SCREENMODE] = "0";
+	return 0;
 }
 
 int Settings::CheckSettingsFile() //
@@ -59,6 +70,9 @@ int Settings::CheckSettingsFile() //
 		//file << "WindowHeigh=" << SettMap["WindowHeigh"] << endl;
 		//file << "WindowTitle=" << SettMap["WindowTitle"] << endl;
 		file.close();
+		
+		SettMapParamScreenmodeCrutch();
+		
 	}
 	else
 	{
@@ -94,5 +108,8 @@ int Settings::LoadSettingsFromFile()
 		//std::cout << SParam << "=" << SValue << std::endl;
 	}
 	file.close();
+	
+	SettMapParamScreenmodeCrutch();
+
 	return 0;
 }
