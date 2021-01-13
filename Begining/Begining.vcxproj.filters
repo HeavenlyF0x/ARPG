@@ -23,7 +23,7 @@
     <ClInclude Include="Settings.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenu.h">
+    <ClInclude Include="Menu.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

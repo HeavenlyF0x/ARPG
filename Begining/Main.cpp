@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Settings.h"
+#include "Menu.h"
+#include <list>
 
 
 using namespace sf;
@@ -13,21 +15,18 @@ int main()
 	
 	int ISelector = 0;
 
-	int ISelectMenu = 0; //lock menu
-	string MenuText[] = {
-				"Main string",
-				"Settings",
-				"Quit" };
+	list<string> MainMenuList = {"Game", "Settings", "Exit"};
+	Menu MainMenu(window, MainMenuList, Vector2f(window.getSize().x / 2, window.getSize().y / 4), 70, 70);
+	MainMenu.View();
+	
+	list<string> GameMenuList = {"New game", "Contine", "Load game", "Back"};
+	Menu GameMenu(window, GameMenuList, Vector2f(0, 0), 120, 120);
 
-	Font font;
-	font.loadFromFile("calibri.ttf");
-	Text text;
-	text.setFont(font);
-	text.setCharacterSize(60);
-	//text.setOrigin(text.getLocalBounds().width/2, 0);
-	//text.getLocalBounds().width;
-	//text.setStyle(Text::Bold);
+	list<string> SettingsParamMenuList = {"Screen mode: ", "Screen resolution: ", "Back"};
+	Menu SettingsParamMenu(window, SettingsParamMenuList, Vector2f(window.getSize().x/4, window.getSize().y / 4), 50, 50);
 
+	list<string> SettingsValueMenuList = {GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE], GameSettings.SettMap[GameSettings.SettMapParam.WINDOWWIDTH] + "x" + GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH] };
+	Menu SettingsValueMenu(window, SettingsValueMenuList, Vector2f(window.getSize().x - window.getSize().x / 4, window.getSize().y / 4), 50, 50);
 	while (window.isOpen())
 	{
 		window.clear();
@@ -42,47 +41,96 @@ int main()
 			case 0: {
 				if (Mouse::isButtonPressed(Mouse::Left))
 				{
-					switch (ISelectMenu)
+					switch (MainMenu.ISelector)
 					{
-					case 1: { //Settings in main menu
-
+					case 0: { //Game in main menu
+						MainMenu.Hide();
+						GameMenu.View();
+						switch (GameMenu.ISelector)
+						{
+						case 3: {//back
+							GameMenu.Hide();
+							MainMenu.View();
+							break;
+						}
+						default:
+							break;
+						}
 						break;
 					}
-					case 2: { //QUIT in Main menu
+					case 1: { //Settings in main menu
+						MainMenu.Hide();
+						SettingsParamMenu.View();
+						SettingsValueMenu.View();
+						switch (SettingsParamMenu.ISelector)
+						{
+						case 2: {//back
+							SettingsParamMenu.Hide();
+							SettingsValueMenu.Hide();
+							MainMenu.View();
+							break;
+						}
+						default:
+							break;
+						}
+						break;
+					}
+					case 2: { //Exit in Main menu
 						window.close();
 						break;
 					}
 					default:
 						break;
 					}
-					std::cout << "Selected: " << MenuText[ISelectMenu] << std::endl;
-					//std::cout << "Mouse position X:" << Mouse::getPosition().x - window.getPosition().x << " Y:" << Mouse::getPosition().y - window.getPosition().y << endl;
 				}
+				MainMenu.MenuSelector();
+				GameMenu.MenuSelector();
+				SettingsParamMenu.MenuSelector();
+				SettingsValueMenu.MenuSelector();
 
-				if (Keyboard::isKeyPressed(Keyboard::Up) && ISelectMenu > 0)
-				{
-					ISelectMenu--;
-				}
-				if (Keyboard::isKeyPressed(Keyboard::Down) && ISelectMenu < size(MenuText)-1)
-				{
-					ISelectMenu++;
-				}
 				if (Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space))
 				{
-					switch (ISelectMenu)
+					switch (MainMenu.ISelector)
 					{
-					case 1: { //Settings in main menu
-
+					case 0: { //Game in main menu
+						MainMenu.Hide();
+						GameMenu.View();
+						switch (GameMenu.ISelector)
+						{
+						case 3: {//back
+							GameMenu.Hide();
+							MainMenu.View();
+							break;
+						}
+						default:
+							break;
+						}
 						break;
 					}
-					case 2: { //QUIT in Main menu
+					case 1: { //Settings in main menu
+						MainMenu.Hide();
+						SettingsParamMenu.View();
+						SettingsValueMenu.View();
+						switch (SettingsParamMenu.ISelector)
+						{
+						case 2: {
+							SettingsParamMenu.Hide();
+							SettingsValueMenu.Hide();
+							MainMenu.View();
+							break;
+						}
+						default:
+							break;
+						}
+						break;
+					}
+					case 2: { //Exit in Main menu
 						window.close();
 						break;
 					}
 					default:
 						break;
 					}
-					std::cout << "Selected: " << MenuText[ISelectMenu] << std::endl;
 				}
 				break;
 			}
@@ -96,36 +144,16 @@ int main()
 		{
 		case 0: 
 			{ //main menu
-				int IStartPosX = (window.getSize().x ) / 2 - text.getLocalBounds().width; // меню в середине экрана
-				int IStartPosY = window.getSize().y / 4;
-				int IStepPos = 60;
-				text.setPosition(IStartPosX, IStartPosY);
-				for (int i = 0; i < size(MenuText); i++)
-				{
-					if (i == ISelectMenu)
-						text.setFillColor(Color::Green);
-					else text.setFillColor(Color::White);
-
-					text.setString(MenuText[i]);
-					text.setPosition(IStartPosX , IStartPosY + IStepPos * i);
-					//if (i != 0)
-						//text.move(0, IStepPos);
-					if (Mouse::getPosition().x - window.getPosition().x > text.getPosition().x && Mouse::getPosition().x - window.getPosition().x < text.getPosition().x + text.getLocalBounds().width &&
-						Mouse::getPosition().y - window.getPosition().y > text.getPosition().y && Mouse::getPosition().y - window.getPosition().y < text.getPosition().y + text.getLocalBounds().height)
-					{
-						//text.setFillColor(Color::Red);
-						ISelectMenu = i;
-					}
-					window.draw(text);
-
-					//std::cout << "Text pos X:" << text.getPosition().x << " Y:" << text.getPosition().y << std::endl;
-				}
+			MainMenu.ViewMenu();
+			GameMenu.ViewMenu();
+			SettingsParamMenu.ViewMenu();
+			SettingsValueMenu.ViewMenu();
 				break;
 			}
 		}
-		window.draw(text);
+		//window.draw(text);
 		window.display();
-		//std::cout << ISelectMenu << std::endl;
+		std::cout << "Main: " << MainMenu.ISelector << " Game: " << GameMenu.ISelector << " SettParam: " << SettingsParamMenu.ISelector << " SettValue: " << SettingsValueMenu.ISelector << endl;
 	}
 	//system("pause");
 	return 0;
