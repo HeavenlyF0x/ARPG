@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <list>
+#include "Settings.h"
 
 using namespace sf;
 
@@ -15,12 +16,16 @@ public:
 	bool visible;
 
 	//Menu();
-	Menu(RenderWindow& _window, list<string> _MenuList, Vector2f _MenuPos, float _StringGap, float _FontSize);
+	Menu(RenderWindow& _window, list<string> MenuList, Vector2f _MenuPos, float _StringGap, float _FontSize);
 	~Menu();
 	int ViewMenu();
 	int MenuSelector();
 	bool View();
 	bool Hide();
+	void setMenuList(list<string> _MenuList);
+	//void StartMenuControl();
+
+	
 private:
 	RenderWindow& window;
 	list<string> MenuList;
@@ -110,4 +115,9 @@ bool Menu::Hide()
 	visible = false;
 	//ISelector = -1;
 	return visible;
+}
+void Menu::setMenuList(list<string> _MenuList)
+{
+	MenuList = _MenuList;
+	ISelector = -1;
 }

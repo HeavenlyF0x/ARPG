@@ -3,6 +3,7 @@
 #include "Settings.h"
 #include "Menu.h"
 #include <list>
+#include <map>
 
 
 using namespace sf;
@@ -13,20 +14,27 @@ int main()
 	RenderWindow window(sf::VideoMode(std::stof(GameSettings.SettMap[GameSettings.SettMapParam.WINDOWWIDTH]), std::stof(GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH])),
 		GameSettings.SettMap[GameSettings.SettMapParam.WINDOWTITLE], stoi(GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE]));
 	
-	int ISelector = 0;
+	int IMainProgramSelector = 0;
 
-	list<string> MainMenuList = {"Game", "Settings", "Exit"};
-	Menu MainMenu(window, MainMenuList, Vector2f(window.getSize().x / 2, window.getSize().y / 4), 70, 70);
-	MainMenu.View();
 	
-	list<string> GameMenuList = {"New game", "Contine", "Load game", "Back"};
-	Menu GameMenu(window, GameMenuList, Vector2f(0, 0), 120, 120);
+	int IMenuSelector = 0;
+	int ISelector = -1;
 
-	list<string> SettingsParamMenuList = {"Screen mode: ", "Screen resolution: ", "Back"};
-	Menu SettingsParamMenu(window, SettingsParamMenuList, Vector2f(window.getSize().x/4, window.getSize().y / 4), 50, 50);
+	list<string> MainMenuList = { "Game", "Settings", "Exit" };
+	list<string> GameMenuList = { "New game", "Contine", "Load game", "Back" };
+	list<string> SettingsMenuList = { "Screen mode: " + GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE], "Screen resolution: " + GameSettings.SettMap[GameSettings.SettMapParam.WINDOWWIDTH] + "x" + GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH], "Back" };
 
-	list<string> SettingsValueMenuList = {GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE], GameSettings.SettMap[GameSettings.SettMapParam.WINDOWWIDTH] + "x" + GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH] };
-	Menu SettingsValueMenu(window, SettingsValueMenuList, Vector2f(window.getSize().x - window.getSize().x / 4, window.getSize().y / 4), 50, 50);
+	/*map<int, list<string>> MenuListMap =
+	{
+		{0, MainMenuList},
+		{1, GameMenuList},
+		{2, SettingsMenuList}
+	};*/
+	
+
+	Menu MainMenu(window, MainMenuList, Vector2f(0, 0), 70, 70);
+	MainMenu.View();
+
 	while (window.isOpen())
 	{
 		window.clear();
@@ -36,70 +44,41 @@ int main()
 			if (event.type == Event::Closed) {
 				window.close();
 			}
-			switch (ISelector)
+			switch (IMainProgramSelector)
 			{
-			case 0: {
-				if (Mouse::isButtonPressed(Mouse::Left))
-				{
-					switch (MainMenu.ISelector)
-					{
-					case 0: { //Game in main menu
-						MainMenu.Hide();
-						GameMenu.View();
-						switch (GameMenu.ISelector)
-						{
-						case 3: {//back
-							GameMenu.Hide();
-							MainMenu.View();
-							break;
-						}
-						default:
-							break;
-						}
-						break;
-					}
-					case 1: { //Settings in main menu
-						MainMenu.Hide();
-						SettingsParamMenu.View();
-						SettingsValueMenu.View();
-						switch (SettingsParamMenu.ISelector)
-						{
-						case 2: {//back
-							SettingsParamMenu.Hide();
-							SettingsValueMenu.Hide();
-							MainMenu.View();
-							break;
-						}
-						default:
-							break;
-						}
-						break;
-					}
-					case 2: { //Exit in Main menu
-						window.close();
-						break;
-					}
-					default:
-						break;
-					}
-				}
-				MainMenu.MenuSelector();
-				GameMenu.MenuSelector();
-				SettingsParamMenu.MenuSelector();
-				SettingsValueMenu.MenuSelector();
+			case 0: { //Тело стартового меню
 
-				if (Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space))
+				ISelector = MainMenu.MenuSelector();
+				
+				/*if (Mouse::isButtonPressed(Mouse::Left))
 				{
-					switch (MainMenu.ISelector)
+					
+				}*/
+
+				if (Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space) || Mouse::isButtonPressed(Mouse::Left))
+				{
+					switch (IMenuSelector)
 					{
-					case 0: { //Game in main menu
-						MainMenu.Hide();
-						GameMenu.View();
-						switch (GameMenu.ISelector)
+					case 0: //MainMenuList
+					{
+						switch (ISelector)
 						{
-						case 3: {//back
-							GameMenu.Hide();
-							MainMenu.View();
+						case 0: //Game
+						{
+							MainMenu.setMenuList(GameMenuList);
+							IMenuSelector = 1;
+							break;
+						}
+						case 1: //Settings
+						{
+							MainMenu.setMenuList(SettingsMenuList);
+							IMenuSelector = 2;
+							break;
+						}
+						case 2: //Exit
+						{
+							MainMenu.setMenuList(list<string>() = { "Yes", "No" });
+							IMenuSelector = -1;
 							break;
 						}
 						default:
@@ -107,16 +86,29 @@ int main()
 						}
 						break;
 					}
-					case 1: { //Settings in main menu
-						MainMenu.Hide();
-						SettingsParamMenu.View();
-						SettingsValueMenu.View();
-						switch (SettingsParamMenu.ISelector)
+					case 1: //GameMenuList = {"New game", "Contine", "Load game", "Back"};
+					{
+						switch (ISelector)
 						{
-						case 2: {
-							SettingsParamMenu.Hide();
-							SettingsValueMenu.Hide();
-							MainMenu.View();
+						case 0: // new game
+						{
+
+							break;
+						}
+						case 1: //contine
+						{
+
+							break;
+						}
+						case 2: //Load game
+						{
+
+							break;
+						}
+						case 3: // back (to main menu)
+						{
+							MainMenu.setMenuList(MainMenuList);
+							IMenuSelector = 0;
 							break;
 						}
 						default:
@@ -124,14 +116,49 @@ int main()
 						}
 						break;
 					}
-					case 2: { //Exit in Main menu
-						window.close();
+					case 2: //SettingsMenuList
+					{
+						switch (ISelector)
+						{
+						case 2: //back (to main menu)
+						{
+							MainMenu.setMenuList(MainMenuList);
+							IMenuSelector = 0;
+							break;
+						}
+						default:
+							break;
+						}
+						break;
+					}
+					case -1: // подтверждение выхода из программы
+					{
+						switch (ISelector)
+						{
+						case 0:
+						{
+							window.close();
+						}
+						case 1:
+						{
+							MainMenu.setMenuList(MainMenuList);
+							IMenuSelector = 0;
+							break;
+						}
+						default:
+							break;
+						}
 						break;
 					}
 					default:
 						break;
 					}
 				}
+				break;
+			}
+			case 1: //Тело игрового процесса
+			{
+				
 				break;
 			}
 			default:
@@ -140,21 +167,21 @@ int main()
 			
 		}
 
-		switch (ISelector)
+		switch (IMainProgramSelector)
 		{
-		case 0: 
-			{ //main menu
-			MainMenu.ViewMenu();
-			GameMenu.ViewMenu();
-			SettingsParamMenu.ViewMenu();
-			SettingsValueMenu.ViewMenu();
+		case 0: //Тело стартового меню
+			{ 
+				MainMenu.ViewMenu();
 				break;
 			}
+		default:
+			break;
 		}
 		//window.draw(text);
 		window.display();
-		std::cout << "Main: " << MainMenu.ISelector << " Game: " << GameMenu.ISelector << " SettParam: " << SettingsParamMenu.ISelector << " SettValue: " << SettingsValueMenu.ISelector << endl;
+		//std::cout << "Main: " << MainMenu.ISelector << " Game: " << GameMenu.ISelector << " SettParam: " << SettingsParamMenu.ISelector << " SettValue: " << SettingsValueMenu.ISelector << endl;
 	}
 	//system("pause");
+
 	return 0;
 }
