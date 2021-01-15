@@ -32,7 +32,7 @@ int main()
 	};*/
 	
 
-	Menu MainMenu(window, MainMenuList, Vector2f(0, 0), 70, 70);
+	Menu MainMenu(window, MainMenuList, Vector2f(window.getSize().x/3, window.getSize().y/3), 70, 50);
 	MainMenu.View();
 
 	while (window.isOpen())
@@ -55,7 +55,7 @@ int main()
 					
 				}*/
 
-				if (Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space) || Mouse::isButtonPressed(Mouse::Left))
+				if (Keyboard::isKeyPressed(Keyboard::Enter) || Keyboard::isKeyPressed(Keyboard::Space) || (event.type == Event::MouseButtonReleased && event.mouseButton.button == Mouse::Left))
 				{
 					switch (IMenuSelector)
 					{

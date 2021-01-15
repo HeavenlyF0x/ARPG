@@ -41,6 +41,7 @@ Menu::Menu(RenderWindow& _window, list<string> _MenuList, Vector2f _MenuPos, flo
 	MenuPos = _MenuPos;
 	StringGap = _StringGap;
 	font.loadFromFile("calibri.ttf");
+	//font.loadFromFile("COLONNA.TTF");
 	visible = false;
 	ISelector = -1;
 	text.setCharacterSize(_FontSize);
@@ -58,6 +59,12 @@ int Menu::ViewMenu()
 		//text.setCharacterSize(StringGap);
 		text.setPosition(MenuPos);
 		int iter = 0;
+		///////////////////
+		RectangleShape DebugRect;
+		DebugRect.setOutlineColor(Color::Yellow);
+		DebugRect.setFillColor(Color::Black);
+		DebugRect.setOutlineThickness(1);
+		///////////////////
 		for (string SMenuString : MenuList)
 		{
 			if (iter == ISelector)
@@ -65,7 +72,7 @@ int Menu::ViewMenu()
 			else text.setFillColor(Color::White);
 			text.setString(SMenuString);
 			if (Mouse::getPosition().x - window.getPosition().x > text.getPosition().x && Mouse::getPosition().x - window.getPosition().x < text.getPosition().x + text.getLocalBounds().width &&
-				Mouse::getPosition().y - window.getPosition().y > text.getPosition().y && Mouse::getPosition().y - window.getPosition().y < text.getPosition().y + text.getLocalBounds().height)
+				Mouse::getPosition().y - window.getPosition().y > text.getPosition().y && Mouse::getPosition().y - window.getPosition().y < text.getPosition().y + text.getCharacterSize())
 			{
 				text.setFillColor(Color::Red);
 				ISelector = iter;
@@ -75,11 +82,16 @@ int Menu::ViewMenu()
 				//ISelector = -1; 
 				//text.setFillColor(Color::Blue);
 			}
+			DebugRect.setPosition(text.getPosition());
+			DebugRect.setSize(Vector2f(text.getLocalBounds().width, text.getCharacterSize()));
+			//DebugRect.setSize(Vector2f(text.getLocalBounds().width, text.getLocalBounds().height));
+			window.draw(DebugRect);
 			window.draw(text);
+			//window.draw(RectangleShape(Vector2f(50, 50)));
 			text.move(0, StringGap);
+			//text.setPosition(0, StringGap*(iter));
 			iter++;
 		}
-		//std::cout << "Select: " << ISelector << endl;
 	}
 	return 0;
 }
