@@ -25,6 +25,8 @@ public:
 
 	Settings();
 	~Settings();
+
+	void SaveNewSattings();
 private:
 	string SettingFile = "Settings.ini";
 	int CheckSettingsFile(); //Проверяет наличие файла с настройками, если его нет, то создает и заполняет стандратными настройками (Settings.SettMap), если он есть выполняет LoadSettingsFromFile()
@@ -37,7 +39,7 @@ Settings::Settings()
 	SettMap = { //Стандартные параметры
 	    {SettMapParam.WINDOWWIDTH, "1280"},
 	    {SettMapParam.WINDOWHEIGH, "1024"},
-	    {SettMapParam.WINDOWTITLE, "Paxamet's ARPG"},
+	    {SettMapParam.WINDOWTITLE, "ARPG"},
 		{SettMapParam.SCREENMODE, "Borderless"} //None - 0 , без рамки не на весь экран (Borderless); Fullscreen - 8 - фуллскрин
 	};
 	CheckSettingsFile();
@@ -90,21 +92,24 @@ int Settings::LoadSettingsFromFile()
 	{
 		string SettingString, SParam, SValue;
 		file >> SettingString; // читаем строку из файла и парсим её на парамерт и его значение
-		bool BItsValue = false;
-		for (int i = 0; i < SettingString.size(); i++)
+		if (SettingString != "")
 		{
-			if (!BItsValue)
+			bool BItsValue = false;
+			for (int i = 0; i < SettingString.size(); i++)
 			{
-				if (SettingString[i] != '=')
-					SParam += SettingString[i];
+				if (!BItsValue)
+				{
+					if (SettingString[i] != '=')
+						SParam += SettingString[i];
+					else
+						BItsValue = true;
+				}
 				else
-					BItsValue = true;
+					SValue += SettingString[i];
 			}
-			else
-				SValue += SettingString[i];
+			BItsValue = false; //Закончили парсить
+			SettMap[SParam] = SValue;
 		}
-		BItsValue = false; //Закончили парсить
-		SettMap[SParam] = SValue;
 		//std::cout << SParam << "=" << SValue << std::endl;
 	}
 	file.close();
@@ -112,4 +117,12 @@ int Settings::LoadSettingsFromFile()
 	SettMapParamScreenmodeCrutch();
 
 	return 0;
+}
+
+void Settings::SaveNewSattings()
+{
+	ofstream file(SettingFile);
+	for (auto it = SettMap.begin(); it != SettMap.end(); it++)
+		file << it->first << "=" << it->second << endl;
+	file.close();
 }

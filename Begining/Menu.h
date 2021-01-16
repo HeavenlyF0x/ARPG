@@ -16,26 +16,26 @@ public:
 	bool visible;
 
 	//Menu();
-	Menu(RenderWindow& _window, list<string> MenuList, Vector2f _MenuPos, float _StringGap, float _FontSize);
+	Menu(RenderWindow& _window, vector<string> MenuList, Vector2f _MenuPos, float _StringGap, float _FontSize);
 	~Menu();
 	int ViewMenu();
 	int MenuSelector();
 	bool View();
 	bool Hide();
-	void setMenuList(list<string> _MenuList);
+	void setMenuList(vector<string> _MenuList);
 	//void StartMenuControl();
 
 	
 private:
 	RenderWindow& window;
-	list<string> MenuList;
+	vector<string> MenuList;
 };
 
 //Menu::Menu()
 //{
 //}
 
-Menu::Menu(RenderWindow& _window, list<string> _MenuList, Vector2f _MenuPos, float _StringGap, float _FontSize) : window(_window)
+Menu::Menu(RenderWindow& _window, vector<string> _MenuList, Vector2f _MenuPos, float _StringGap, float _FontSize) : window(_window)
 {
 	MenuList = _MenuList;
 	MenuPos = _MenuPos;
@@ -128,7 +128,7 @@ bool Menu::Hide()
 	//ISelector = -1;
 	return visible;
 }
-void Menu::setMenuList(list<string> _MenuList)
+void Menu::setMenuList(vector<string> _MenuList)
 {
 	MenuList = _MenuList;
 	ISelector = -1;

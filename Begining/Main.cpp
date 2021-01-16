@@ -4,6 +4,7 @@
 #include "Menu.h"
 #include <list>
 #include <map>
+#include <vector>
 
 
 using namespace sf;
@@ -20,17 +21,20 @@ int main()
 	int IMenuSelector = 0;
 	int ISelector = -1;
 
-	list<string> MainMenuList = { "Game", "Settings", "Exit" };
-	list<string> GameMenuList = { "New game", "Contine", "Load game", "Back" };
-	list<string> SettingsMenuList = { "Screen mode: " + GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE], "Screen resolution: " + GameSettings.SettMap[GameSettings.SettMapParam.WINDOWWIDTH] + "x" + GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH], "Back" };
-
-	/*map<int, list<string>> MenuListMap =
-	{
-		{0, MainMenuList},
-		{1, GameMenuList},
-		{2, SettingsMenuList}
-	};*/
-	
+	vector<string> MainMenuList = { "Game", "Settings", "Exit" };
+	vector<string> GameMenuList = { "New game", "Contine", "Load game", "Back" };
+	/// SCREENMODE CRUTCH
+	if (GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE] == "0")
+		GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE] = "Borderless";
+	else if (GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE] == "8")
+		GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE] = "Fullscreen";
+	//////
+	vector<string> SettingsMenuList = {
+		"Screen mode: " + GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE], 
+		"Screen resolution: " + GameSettings.SettMap[GameSettings.SettMapParam.WINDOWWIDTH] + "x" + GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH], 
+		"Defaul settings",
+		"Accept", 
+		"Back" };
 
 	Menu MainMenu(window, MainMenuList, Vector2f(window.getSize().x/3, window.getSize().y/3), 70, 50);
 	MainMenu.View();
@@ -77,7 +81,7 @@ int main()
 						}
 						case 2: //Exit
 						{
-							MainMenu.setMenuList(list<string>() = { "Yes", "No" });
+							MainMenu.setMenuList(vector<string>() = { "Yes", "No" });
 							IMenuSelector = -1;
 							break;
 						}
@@ -120,7 +124,27 @@ int main()
 					{
 						switch (ISelector)
 						{
-						case 2: //back (to main menu)
+						case 0: //screenmode
+						{
+							if (SettingsMenuList[0] == "Screen mode: Borderless")
+								SettingsMenuList[0] = "Screen mode: Fullscreen";
+							else if (SettingsMenuList[0] == "Screen mode: Fullscreen")
+								SettingsMenuList[0] = "Screen mode: Borderless";
+							MainMenu.setMenuList(SettingsMenuList);
+							break;
+						}
+						case 3:
+						{
+							GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE] = SettingsMenuList[0].erase(0, string("Screen mode: ").size());
+							string buff = SettingsMenuList[1].erase(0, string("Screen resolution: ").size());
+							GameSettings.SettMap[GameSettings.SettMapParam.WINDOWWIDTH] = buff.erase(buff.find("x"), buff.size());
+							GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH] = SettingsMenuList[1].erase(0, SettingsMenuList[1].find("x") + 1);
+							GameSettings.SaveNewSattings();
+							MainMenu.setMenuList(MainMenuList);
+							IMenuSelector = 0;
+							break;
+						}
+						case 4: //back (to main menu)
 						{
 							MainMenu.setMenuList(MainMenuList);
 							IMenuSelector = 0;
@@ -138,6 +162,7 @@ int main()
 						case 0:
 						{
 							window.close();
+							break;
 						}
 						case 1:
 						{
