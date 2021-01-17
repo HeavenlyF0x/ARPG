@@ -36,6 +36,8 @@ int main()
 		"Accept", 
 		"Back" };
 
+	string ScreenResolutionArr[] = { "1920x1080", "1280x960", "1280x720", "1200x800", "1024x768", "800x600" };
+
 	Menu MainMenu(window, MainMenuList, Vector2f(window.getSize().x/3, window.getSize().y/3), 70, 50);
 	MainMenu.View();
 
@@ -130,15 +132,38 @@ int main()
 								SettingsMenuList[0] = "Screen mode: Fullscreen";
 							else if (SettingsMenuList[0] == "Screen mode: Fullscreen")
 								SettingsMenuList[0] = "Screen mode: Borderless";
+							else SettingsMenuList[0] = "Screen mode: Borderless";
 							MainMenu.setMenuList(SettingsMenuList);
 							break;
 						}
-						case 3:
+						case 1://screen resolution
 						{
-							GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE] = SettingsMenuList[0].erase(0, string("Screen mode: ").size());
-							string buff = SettingsMenuList[1].erase(0, string("Screen resolution: ").size());
+							if (SettingsMenuList[1] == "Screen resolution: " + ScreenResolutionArr[0])
+								SettingsMenuList[1] = "Screen resolution: " + ScreenResolutionArr[1];
+							else if (SettingsMenuList[1] == "Screen resolution: " + ScreenResolutionArr[1])
+								SettingsMenuList[1] = "Screen resolution: " + ScreenResolutionArr[2];
+							else if (SettingsMenuList[1] == "Screen resolution: " + ScreenResolutionArr[2])
+								SettingsMenuList[1] = "Screen resolution: " + ScreenResolutionArr[3];
+							else if (SettingsMenuList[1] == "Screen resolution: " + ScreenResolutionArr[3])
+								SettingsMenuList[1] = "Screen resolution: " + ScreenResolutionArr[4];
+							else if (SettingsMenuList[1] == "Screen resolution: " + ScreenResolutionArr[4])
+								SettingsMenuList[1] = "Screen resolution: " + ScreenResolutionArr[5];
+							else if (SettingsMenuList[1] == "Screen resolution: " + ScreenResolutionArr[5])
+								SettingsMenuList[1] = "Screen resolution: " + ScreenResolutionArr[0];
+							else SettingsMenuList[1] = "Screen resolution: " + ScreenResolutionArr[0];
+							MainMenu.setMenuList(SettingsMenuList);
+							break;
+						}
+						case 3://Accept
+						{
+							string buff = SettingsMenuList[0];
+							GameSettings.SettMap[GameSettings.SettMapParam.SCREENMODE] = buff.erase(0, string("Screen mode: ").size());
+							buff = SettingsMenuList[1];
+							buff.erase(0, string("Screen resolution: ").size());
+							//.erase(0, string("Screen resolution: ").size())
 							GameSettings.SettMap[GameSettings.SettMapParam.WINDOWWIDTH] = buff.erase(buff.find("x"), buff.size());
-							GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH] = SettingsMenuList[1].erase(0, SettingsMenuList[1].find("x") + 1);
+							buff = SettingsMenuList[1];
+							GameSettings.SettMap[GameSettings.SettMapParam.WINDOWHEIGH] = buff.erase(0, SettingsMenuList[1].find("x") + 1);
 							GameSettings.SaveNewSattings();
 							MainMenu.setMenuList(MainMenuList);
 							IMenuSelector = 0;

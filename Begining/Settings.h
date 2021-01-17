@@ -40,7 +40,7 @@ Settings::Settings()
 	    {SettMapParam.WINDOWWIDTH, "1280"},
 	    {SettMapParam.WINDOWHEIGH, "1024"},
 	    {SettMapParam.WINDOWTITLE, "ARPG"},
-		{SettMapParam.SCREENMODE, "Borderless"} //None - 0 , без рамки не на весь экран (Borderless); Fullscreen - 8 - фуллскрин
+		{SettMapParam.SCREENMODE, "Fullscreen"} //None - 0 , без рамки не на весь экран (Borderless); Fullscreen - 8 - фуллскрин
 	};
 	CheckSettingsFile();
 }
@@ -108,7 +108,8 @@ int Settings::LoadSettingsFromFile()
 					SValue += SettingString[i];
 			}
 			BItsValue = false; //Закончили парсить
-			SettMap[SParam] = SValue;
+			if(SValue != "")
+				SettMap[SParam] = SValue;
 		}
 		//std::cout << SParam << "=" << SValue << std::endl;
 	}
