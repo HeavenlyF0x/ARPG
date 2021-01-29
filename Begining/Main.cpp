@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Settings.h"
 #include "Menu.h"
+#include "World.h"
 #include <list>
 #include <map>
 #include <vector>
@@ -16,6 +17,11 @@ void main()
 	Menu MainMenu(window);
 	MainMenu.setDebugBoxView(true);
 	int IMainProgramSelector = 0;
+
+	//
+	World world;
+	//
+	
 	while (window.isOpen())
 	{
 		window.clear();
@@ -27,21 +33,28 @@ void main()
 			switch (IMainProgramSelector)
 			{
 			case 0:  //стартовое меню
-				MainMenu.MainMenuChanger(event, GameSettings);
+				IMainProgramSelector = MainMenu.MainMenuChanger(event, GameSettings);
 				break;
 			case 1: //игровой процесс
+			{
+
+			}
 				break;
 			default:
 				break;
 			}
 			
 		}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		switch (IMainProgramSelector)//////// отрисовка
 		{
 		case 0:  //стартовое меню
 			MainMenu.DrawMenu();
 			break;
 		case 1: //игровой процесс
+		{
+			world.DrawWorld(window);
+		}
 			break;
 		default:
 			break;

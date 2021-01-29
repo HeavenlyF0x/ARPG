@@ -183,7 +183,7 @@ int Menu::MainMenuChanger(Event& event, Settings& settings)
 			{
 			case 0: // new game
 			{
-
+				return 1; //Chenge IMainProgramSelector from Main.cpp
 				break;
 			}
 			case 1: //contine
