@@ -1,49 +1,77 @@
-#pragma once 
+#pragma once
 #include <SFML/Graphics.hpp>
-#include <map>
-const unsigned int WORLDMAXWIDTH = 50;
-const unsigned int WORLDMAXHEIGH = 80;
+#include<map>
+#include "Settings.h"
 
-using namespace sf;
+using namespace std;
 
 class World
 {
 public:
 	World();
 	~World();
-	void FillEmptryWorld();
-	void DrawWorld(RenderWindow& window);
+	void DrawWorld(RenderWindow &_window);
+	void ShowGrid(bool value);
 private:
-	int world[WORLDMAXWIDTH][WORLDMAXWIDTH];
-	Vector2f TileSize;
-	Vector2f BeginigPosition;
-	map<int, Vector3i> TileSet;
+	map<int, sf::Color> TileSet;
+	static const int WORLD_W = 30;
+	static const int WORLD_H = 30;
+	int world[WORLD_W][WORLD_H];
+	void FillTestWorld();
 	RectangleShape Tile;
+	Vector2f TileSize = { 32, 32 };
+	Vector2f BeginigWorld = { 0, 0};
+	bool Grid;
 };
 
 World::World()
 {
-	FillEmptryWorld();
-	TileSize = Vector2f(32, 32);
-	BeginigPosition = Vector2f(0, 0);
+	TileSet = {
+		{0, sf::Color::White},
+		{1, sf::Color::Cyan}
+	};
+	FillTestWorld();
+	Tile.setSize(TileSize);
+	Tile.setOutlineColor(Color::Black);
+	ShowGrid(true);
 }
 
 World::~World()
 {
 }
 
-void World::FillEmptryWorld()
+inline void World::DrawWorld(RenderWindow& _window)
 {
-	for (int i = 0; i < WORLDMAXWIDTH; i++)
-		for (int j = 0; j < WORLDMAXHEIGH; j++)
-			world[i][j] = 0;
+	Grid?Tile.setOutlineThickness(1):Tile.setOutlineThickness(0);
+	RenderWindow& win = _window;
+	for (int x = 0; x < WORLD_W; x++)
+		for (int y = 0; y < WORLD_H; y++)
+		{
+			Tile.setPosition(Vector2f(BeginigWorld.x + TileSize.x * x, BeginigWorld.y + TileSize.y * y));
+			Tile.setFillColor(TileSet[world[x][y]]);
+			//
+			if (Mouse::getPosition().x - win.getPosition().x > BeginigWorld.x + TileSize.x * x && Mouse::getPosition().y - win.getPosition().y > BeginigWorld.y + TileSize.y * y &&
+				Mouse::getPosition().x - win.getPosition().x < BeginigWorld.x + TileSize.x * (x + 1) && Mouse::getPosition().y - win.getPosition().y < BeginigWorld.y + TileSize.y * (y + 1))
+			{
+				Tile.setFillColor(Color::Red);
+
+			//	cout << "X =\t" << x << "\tY = \t" << y << endl;
+			}
+			win.draw(Tile);
+		}
 }
 
-inline void World::DrawWorld(RenderWindow &window)
+inline void World::ShowGrid(bool value)
 {
-	for (int i = 0; i < WORLDMAXWIDTH; i++)
-		for (int j = 0; j < WORLDMAXHEIGH; j++)
-		{
-			//window.draw();
-		}
+	value ? Grid = true : Grid = false;
+}
+
+
+inline void World::FillTestWorld()
+{
+	for (int x = 0; x < WORLD_W; x++)
+		for (int y = 0; y < WORLD_H; y++)
+			world[x][y] = 0;
+	world[0][1] = 1;
+	world[10][7] = 1;
 }

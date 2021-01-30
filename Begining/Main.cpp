@@ -2,21 +2,21 @@
 #include <iostream>
 #include "Settings.h"
 #include "Menu.h"
-#include "World.h"
 #include <list>
 #include <map>
 #include <vector>
+#include "World.h"
 
 using namespace sf;
 
 void main()
 {
-	Settings GameSettings = Settings();
+	Settings GameSettings;
 	RenderWindow window(sf::VideoMode(GameSettings.getWindowWidth(), GameSettings.getWindowHeigh()), GameSettings.getWindowTitle(), GameSettings.getScreenModeInt());
 	Event event;	
 	Menu MainMenu(window);
 	MainMenu.setDebugBoxView(true);
-	int IMainProgramSelector = 0;
+	int IMainProgramSelector = 1;
 
 	//
 	World world;
