@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include "World.h"
+#include "Player.h"
 
 using namespace sf;
 
@@ -17,10 +18,8 @@ void main()
 	Menu MainMenu(window);
 	MainMenu.setDebugBoxView(true);
 	int IMainProgramSelector = 1;
-
-	//
 	World world;
-	//
+	Player player(window);
 	
 	while (window.isOpen())
 	{
@@ -37,7 +36,7 @@ void main()
 				break;
 			case 1: //игровой процесс
 			{
-
+				player.PlayerControl(event);
 			}
 				break;
 			default:
@@ -54,6 +53,7 @@ void main()
 		case 1: //игровой процесс
 		{
 			world.DrawWorld(window);
+			player.DrawPlayer();
 		}
 			break;
 		default:
