@@ -19,10 +19,16 @@ void main()
 	MainMenu.setDebugBoxView(true);
 	int IMainProgramSelector = 1;
 	//World world;
-	//Player player(window);
+	Player player(window);
+
+	Clock clock;
 	
 	while (window.isOpen())
 	{
+		float time = clock.getElapsedTime().asMicroseconds();
+		clock.restart();
+		time = time / 1200; 
+		std::cout << time << std::endl;
 		window.clear();
 		while (window.pollEvent(event))///////отлов event'ов
 		{
@@ -36,7 +42,7 @@ void main()
 				break;
 			case 1: //игровой процесс
 			{
-				//player.PlayerControl(event);
+				player.PlayerControl(event);
 			}
 				break;
 			default:
@@ -53,7 +59,7 @@ void main()
 		case 1: //игровой процесс
 		{
 			//world.DrawWorld(window);
-			//player.DrawPlayer();
+			player.Update(time);
 		}
 			break;
 		default:
