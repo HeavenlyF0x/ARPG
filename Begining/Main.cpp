@@ -18,8 +18,8 @@ void main()
 	Menu MainMenu(window);
 	MainMenu.setDebugBoxView(true);
 	int IMainProgramSelector = 1;
-	World world;
-	Player player(window);
+	//World world;
+	//Player player(window);
 	
 	while (window.isOpen())
 	{
@@ -36,7 +36,7 @@ void main()
 				break;
 			case 1: //игровой процесс
 			{
-				player.PlayerControl(event);
+				//player.PlayerControl(event);
 			}
 				break;
 			default:
@@ -52,8 +52,8 @@ void main()
 			break;
 		case 1: //игровой процесс
 		{
-			world.DrawWorld(window);
-			player.DrawPlayer();
+			//world.DrawWorld(window);
+			//player.DrawPlayer();
 		}
 			break;
 		default:
